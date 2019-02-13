@@ -1,0 +1,3 @@
+dear ${PERSON_NAME}
+
+this is just a simple text.
