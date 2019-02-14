@@ -1,3 +1,5 @@
-dear ${PERSON_NAME}
+dear PERSON_NAME
 
-this is just a simple text.
+The email scheduler is working BITCHEEEES!!!!
+
+Thank you.
