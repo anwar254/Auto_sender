@@ -7,7 +7,8 @@ import json
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-cnts = {}
+cnts_names = []
+cnts_emails = []
 msg = []
 
 class Scheduler(object):
@@ -19,7 +20,10 @@ class Scheduler(object):
         cnts_data = open(self.contacts, 'r', encoding="utf-8")
         json_data = json.load(cnts_data)
         for key in json_data:
-            cnts[key] = json_data[key]
+            names = key
+            email = json_data[key]
+            cnts_names.append(names)
+            cnts_emails.append(email)
 
     def get_message(self):
         with open(self.message, 'r', encoding='utf-8') as template_file:
@@ -27,17 +31,35 @@ class Scheduler(object):
         msg.append(template_file_content)
 
 def main():
-    MY_ADDRESS ="anwar@tunapanda.org"
-    PASSWORD = ""
-    # s = smtplib.SMTP(host='smtp.gmail.com', port=587)
-    # s.starttls()
-    # s.login(MY_ADDRESS, PASSWORD)
+    MY_ADDRESS ="zack@tunapanda.org"
+    PASSWORD = "flakkathadon"
+    smtpserver = smtplib.SMTP("smtp.gmail.com", 587)
+    smtpserver.ehlo()
+    smtpserver.starttls()
+    smtpserver.ehlo()
+    smtpserver.login(MY_ADDRESS, PASSWORD)
 
     email_scheduler = Scheduler('contacts.json', 'message.txt')
     email_scheduler.get_contacts()
-    message = email_scheduler.get_message()
+    nme = email_scheduler.get_message()
 
-    print(cnts)
+    for name, email in zip(cnts_names, cnts_emails):
+        msg = MIMEMultipart()
+
+        message = nme.substitute(PERSON_NAME=name.title())
+
+        print(message)
+
+        msg['From']=MY_ADDRESS
+        msg['To']=email
+        msg['Subject']="This is TEST"
+
+        msg.attach(MIMEText(message, 'plain'))
+
+        s.send_message(msg)
+        del msg
+
+        s.quit()
 
     send_date = datetime.datetime(2019, 2, 13, 17, 45)
     tm = datetime.datetime.now()
