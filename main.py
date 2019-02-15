@@ -1,26 +1,36 @@
 import smtplib
-import os
+import getpass 
+from sender import auto_scheduler
 
+def auto_sender():
+    ctnts_list = auto_scheduler.get_contacts()
 
-smtp_object = smtplib.SMTP('smtp.gmail.com', 587)
-smtp_object.ehlo()
-print(smtp_object.ehlo())
-smtp_object.starttls()
-# print(smtp_object.starttls()) 
+    cnts_names = []
+    cnts_emails = []
 
-email = "sadatt254@gmail.com"
-password = os.environ.get('EMAIL_PASS')
-print(password)
+    for list in ctnts_list:
+        names = list[0]
+        emails = list[1]
+        cnts_emails.append(emails)
+   
+    smtp_object = smtplib.SMTP('smtp.gmail.com', 587)
+    smtp_object.ehlo()
+    smtp_object.starttls()
 
-smtp_object.login(email, password)
+    email = "sadatt254@gmail.com"
+    password = getpass.getpass("Password: ")
 
-print("Logged In!")
+    smtp_object.login(email, password)
 
-sender = email
-recipient = "anwar@tunapanda.org"
-subject = "this is my awesome subject"
-message = "hello anwar"
-msg = "Subject: "+subject+"\n"+message
-print(msg)
+    for email in cnts_emails:
+        sender = email
+        recipient = email
+        subject = "this is my awesome subject"
+        message = "hello anwar"
+        msg = "Subject: "+subject+"\n"+message
 
-smtp_object.sendmail(sender, recipient, msg)
+        smtp_object.sendmail(sender, recipient, msg)
+
+if __name__ == '__main__':
+    auto_sender()
+
